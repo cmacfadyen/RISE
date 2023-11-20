@@ -33,9 +33,12 @@ def simulate_course_selection(courses, num_students):
             student_choices.append(chosen_course[0])
 
         # Sort the student's choices based on the original weights
-        student_choices.sort(key=lambda course: next(weight for name, weight in courses if name == course))
+        student_choices.sort(key=lambda course: next(weight for name, weight in courses if name == course),reverse=True)
 
         selected_courses.append(student_choices)
+
+    # Sort students based on the weight of their first course choice
+    selected_courses.sort(key=lambda choices: next(weight for name, weight in courses if name == choices[0]))
 
     return selected_courses
 
@@ -49,10 +52,10 @@ def write_results_to_csv(results, output_file):
             writer.writerow(row_data)
 
 # Example usage with CSV file
-file_path = 'RISEsheet.csv'
+file_path = 'courses_weights.csv'
 output_file = 'results.csv'
 courses = read_course_data(file_path)
-num_students = 1200
+num_students = 1000
 
 selected_courses = simulate_course_selection(courses, num_students)
 
@@ -63,4 +66,3 @@ for i, choices in enumerate(selected_courses, 1):
 # Write results to a new CSV file
 write_results_to_csv(selected_courses, output_file)
 print(f"Results written to {output_file}.")
-

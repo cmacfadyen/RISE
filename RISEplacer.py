@@ -32,12 +32,12 @@ def optimize_student_placement(courses, student_choices, capacity):
     for student_name, choices in student_choices:
         placed = False
 
-        #Try to place student in their choices
+        # Try to place the student in their choices
         for course_name in choices:
             # Find the course capacity and check if it's full
-            current_capacity = placed_students.count(course_name)
+            current_capacity = sum(1 for s, c in placed_students if c == course_name)
             if current_capacity < capacity:
-                placed_students.append(course_name)
+                placed_students.append((student_name, course_name))
                 placed = True
                 break
 
@@ -52,11 +52,11 @@ def write_placement_results(placed_students, not_placed_students, output_file):
         writer.writerow(['Student', 'Placed Course', 'Not Placed'])
         
         for placed, not_placed in zip_longest(placed_students, not_placed_students, fillvalue=('', '')):
-            writer.writerow([placed, not_placed, ''])
+            writer.writerow([placed[0], placed[1], not_placed])
 
 # Example usage
-course_data_file = 'course_data.csv'
-results_file = 'results.csv'
+course_data_file = 'courses_weights.csv'
+results_file = 'results.csv' #'simulated_student_choices.csv'
 placement_output_file = 'placement_results.csv'
 capacity_per_course = 24
 
@@ -74,4 +74,3 @@ print(not_placed_students)
 # Write placement results to a new CSV file
 write_placement_results(placed_students, not_placed_students, placement_output_file)
 print(f"Placement results written to {placement_output_file}.")
-
