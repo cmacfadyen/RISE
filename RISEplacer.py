@@ -32,6 +32,7 @@ def optimize_student_placement(courses, student_choices, capacity):
     for student_name, choices in student_choices:
         placed = False
 
+        #Try to place student in their choices
         for course_name in choices:
             # Find the course capacity and check if it's full
             current_capacity = placed_students.count(course_name)
