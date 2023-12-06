@@ -108,7 +108,7 @@ public class Scheduler {
 			String line;
 
 			// Read header (if it exists)
-			// Uncomment the next line if your CSV file has a header
+			// Uncomment the next line if CSV file has a header
 			// br.readLine();
 
 			while ((line = br.readLine()) != null) {
@@ -184,32 +184,5 @@ public class Scheduler {
 
 	}
 
-//	List<Course> courses = new ArrayList<Course>();
-//	List<Student> students = new ArrayList<Student>();
-//	
-//	
-//	Scanner cr;
-//	try {
-//		cr = new Scanner(new File("/Users/charliemacfadyen/RISE/rise/src/main/resources/surveyResults.csv"));
-//	
-//	System.out.println(cr.next());
-//	cr.useDelimiter(",");
-//	
-//	while(cr.hasNextLine()) {
-//		//skip first line. Also, advance to next line after reading in current line
-//		cr.nextLine();
-//		String name = cr.next();
-//		String[] choices =  new String[NUM_CHOICES];
-//		for(int i=0; i<NUM_CHOICES; i++) {
-//			choices[i]= cr.next();
-//		}
-//		students.add(new Student(name, choices));
-//		
-//	}
-//	
-//	
-//	System.out.println(students.get(1));
-//	} catch (FileNotFoundException e) {
-//		e.printStackTrace();
-//	}
+
 }
