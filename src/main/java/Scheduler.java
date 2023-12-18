@@ -13,27 +13,29 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class Scheduler {
 	static final int NUM_CHOICES = 5; // students pick 5 choices
-	static final int TRIALS = 100000; // how many times to try the algorithm
+	static final int TRIALS = 10; // how many times to try the algorithm
 	static int bestSoFar = 0;// keep track of the best result
 	static int[] results = new int[TRIALS]; // keep track of all results
 	static String studentCsv = "/Users/charliemacfadyen/RISE/rise/src/StudentChoicesByNumber.csv";
 	static String courseCsv = "/Users/charliemacfadyen/RISE/rise/src/course_weights.csv";
-
+	static ArrayList<Student> bestPlacementStudents = new ArrayList<Student>();
 	public static void main(String[] args) {
-
+		
 		int[] successCounter = new int[TRIALS];
 
 		for (int trial = 0; trial < TRIALS; trial++) {
 			successCounter[trial] = runTrial();
 			if (successCounter[trial] > bestSoFar) {
+				bestPlacementStudents = runTrial();
 				bestSoFar = successCounter[trial];
 			}
 		}
 		// export to csv
-		// exportStudentList(students);
+		exportStudentList(bestPlacementStudents);
 		System.out.println(bestSoFar);
 //		System.out.println("**********");
 //		for (int s : successCounter) {
@@ -74,12 +76,29 @@ public class Scheduler {
 				unscheduledStudents.add(student);
 			}
 		}
-
+		for(Student s:unscheduledStudents) {
+			s.setRound(round);
+		}
+		//randomly shuffle the list
 		Collections.shuffle(unscheduledStudents);
 
-		// sort them by weight of next course
-		Collections.sort(unscheduledStudents, (s1, s2) -> ((Double) s1.getChoices()[round].getWeight())
-				.compareTo((Double) (s2.getChoices()[round].getWeight())));
+		// sort them by weight of this round's course
+		//Collections.sort(unscheduledStudents, (s1, s2) -> ((Double) s1.getChoices()[round].getWeight())
+			//	.compareTo((Double) (s2.getChoices()[round].getWeight())));
+		
+		//If it's the last round, only compare the final choices
+		if(round==NUM_CHOICES-1) {
+		
+			unscheduledStudents.sort(Comparator.comparing(Student::getWeightOfCurrentRound));	
+		}
+		
+		//If it's not the last round, compare both the current round choice and the next round's
+		else {
+		unscheduledStudents.sort(Comparator.comparing(Student::getWeightOfCurrentRound)
+				  .thenComparing(Student::getWeightOfNextRound, 
+	               (dbl1, dbl2) -> Double.compare(dbl2, dbl1))); 
+		}
+		
 		// put them into course, if possible
 		for (Student s : unscheduledStudents) {
 			Course desiredCourse = s.getChoices()[round];
@@ -108,7 +127,7 @@ public class Scheduler {
 			String line;
 
 			// Read header (if it exists)
-			// Uncomment the next line if CSV file has a header
+			// Uncomment the next line if your CSV file has a header
 			// br.readLine();
 
 			while ((line = br.readLine()) != null) {
@@ -170,9 +189,9 @@ public class Scheduler {
 			System.out.println(o);
 		}
 	}
-	
+
 	private static void exportStudentList(List<Student> students) {
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter("finalResults.csv"))) {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("best_results.csv")))) {
 			for (Student s : students) {
 				bw.write(s.toString());
 				bw.newLine();
@@ -184,5 +203,32 @@ public class Scheduler {
 
 	}
 
-
+//	List<Course> courses = new ArrayList<Course>();
+//	List<Student> students = new ArrayList<Student>();
+//	
+//	
+//	Scanner cr;
+//	try {
+//		cr = new Scanner(new File("/Users/charliemacfadyen/RISE/rise/src/main/resources/surveyResults.csv"));
+//	
+//	System.out.println(cr.next());
+//	cr.useDelimiter(",");
+//	
+//	while(cr.hasNextLine()) {
+//		//skip first line. Also, advance to next line after reading in current line
+//		cr.nextLine();
+//		String name = cr.next();
+//		String[] choices =  new String[NUM_CHOICES];
+//		for(int i=0; i<NUM_CHOICES; i++) {
+//			choices[i]= cr.next();
+//		}
+//		students.add(new Student(name, choices));
+//		
+//	}
+//	
+//	
+//	System.out.println(students.get(1));
+//	} catch (FileNotFoundException e) {
+//		e.printStackTrace();
+//	}
 }
