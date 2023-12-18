@@ -8,13 +8,13 @@ public class Student{
 	Course placedCourse;
 	boolean placed;
 	int rankPlaced;
+	int round; //used when attempting to schedule
 
 	public Student(String name, Course[] choices) {
 
 		this.name = name;
 		this.choices = choices;
 		this.placed = false;
-		this.rankPlaced = -1;
 	}
 
 	 public String getName() {
@@ -34,6 +34,14 @@ public class Student{
 	}
 
 	
+	public int getRound() {
+		return round;
+	}
+
+	public void setRound(int round) {
+		this.round = round;
+	}
+
 	public Course getPlacedCourse() {
 		return placedCourse;
 	}
@@ -57,12 +65,21 @@ public class Student{
 	public void setRankPlaced(int rankPlaced) {
 		this.rankPlaced = rankPlaced;
 	}
+	
+	public Double getWeightOfCurrentRound() {
+		return this.choices[this.round].weight;
+	}
+	public Double getWeightOfNextRound() {
+		return this.choices[this.round + 1].weight;
+	}
 
 	@Override
 	public String toString() {
 		return "Student [name=" + name + ", placedCourse=" + placedCourse + ", placed=" + placed + ", rankPlaced="
 				+ rankPlaced + "]";
 	}
+
+
 
 	
 	
