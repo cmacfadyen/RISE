@@ -6,12 +6,12 @@ public class Course{
 	Integer id;
 	String name;
 	int capacity;
-	double weight;
+	Double weight;
 	ArrayList<Student> roster;
 	boolean isFull;
 	String time;
 	
-	public Course(Integer id, String name, double weight, int capacity,String time) {
+	public Course(Integer id, String name, Double weight, int capacity,String time) {
 		this.id = id;
 		this.name = name;
 		this.weight = weight;
@@ -45,11 +45,11 @@ public class Course{
 		this.capacity = capacity;
 	}
 
-	public double getWeight() {
+	public Double getWeight() {
 		return weight;
 	}
 
-	public void setWeight(double weight) {
+	public void setWeight(Double weight) {
 		this.weight = weight;
 	}
 
